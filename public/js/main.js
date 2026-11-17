@@ -5,6 +5,7 @@ import {
   buscarPorId,
   calcularIndicadores,
   dataISO,
+  filtrarAgendamentos,
   gerarHorariosLivres,
   ordenarAgendamentos,
   podeConcluir,
@@ -45,6 +46,14 @@ const campos = {
   data: document.querySelector('#data'),
   horario: document.querySelector('#horario'),
   observacao: document.querySelector('#observacao')
+};
+
+const filtros = {
+  busca: document.querySelector('#busca'),
+  status: document.querySelector('#filtro-status'),
+  profissional: document.querySelector('#filtro-profissional'),
+  data: document.querySelector('#filtro-data'),
+  ordenacao: document.querySelector('#ordenacao')
 };
 
 function servicoSelecionado() {
@@ -338,16 +347,39 @@ function tratarCliqueNaLista(evento) {
   }
 }
 
+function lerFiltros() {
+  return {
+    busca: filtros.busca.value,
+    status: filtros.status.value,
+    profissionalId: Number(filtros.profissional.value) || null,
+    data: filtros.data.value
+  };
+}
+
+function limparFiltros() {
+  filtros.busca.value = '';
+  filtros.status.value = 'todos';
+  filtros.profissional.value = '';
+  filtros.data.value = '';
+  filtros.ordenacao.value = 'data';
+  atualizarTela();
+}
+
 function atualizarTela() {
   renderizarIndicadores(calcularIndicadores(estado.agendamentos, estado.servicos));
 
-  const ordenados = ordenarAgendamentos(estado.agendamentos, 'data', estado.servicos);
+  const filtrosAtuais = lerFiltros();
+  const filtrados = filtrarAgendamentos(estado.agendamentos, filtrosAtuais);
+  const ordenados = ordenarAgendamentos(filtrados, filtros.ordenacao.value, estado.servicos);
+  const filtrando = Boolean(
+    filtrosAtuais.busca.trim() || filtrosAtuais.status !== 'todos' || filtrosAtuais.profissionalId || filtrosAtuais.data
+  );
 
   renderizarLista(ordenados, {
     servicos: estado.servicos,
     profissionais: estado.profissionais,
     total: estado.agendamentos.length,
-    filtrando: false
+    filtrando
   });
 }
 
@@ -390,7 +422,13 @@ function preencherSelects() {
     texto: `${servico.nome} — ${formatarMoeda(servico.preco)}`
   }));
 
+  const opcoesProfissionais = estado.profissionais.map(profissional => ({
+    valor: profissional.id,
+    texto: profissional.nome
+  }));
+
   preencherOpcoes(campos.servicoId, opcoesServicos, 'Selecione o serviço');
+  preencherOpcoes(filtros.profissional, opcoesProfissionais, 'Todos os profissionais');
 }
 
 function registrarEventos() {
@@ -406,6 +444,12 @@ function registrarEventos() {
   campos.data.addEventListener('change', () => atualizarHorarios());
 
   document.querySelector('#lista-agendamentos').addEventListener('click', tratarCliqueNaLista);
+
+  filtros.busca.addEventListener('input', atualizarTela);
+  [filtros.status, filtros.profissional, filtros.data, filtros.ordenacao].forEach(filtro => {
+    filtro.addEventListener('change', atualizarTela);
+  });
+  document.querySelector('#btn-limpar-filtros').addEventListener('click', limparFiltros);
 }
 
 async function iniciar() {
