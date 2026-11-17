@@ -7,6 +7,7 @@ import {
   dataISO,
   gerarHorariosLivres,
   ordenarAgendamentos,
+  podeConcluir,
   validarAgendamento,
   verificarDia
 } from './regras.js';
@@ -170,15 +171,170 @@ async function salvarAgendamento(evento) {
   botaoSalvar.disabled = true;
 
   try {
-    const novo = await api.criarAgendamento({ ...dados, status: 'agendado' });
-    estado.agendamentos.push(novo);
-    mostrarMensagem(`Agendamento de ${novo.cliente} confirmado para ${formatarData(novo.data)} às ${novo.horario}.`);
+    if (estado.editandoId) {
+      const original = buscarPorId(estado.agendamentos, estado.editandoId);
+      if (!original) {
+        throw new Error('O agendamento que estava sendo editado não existe mais.');
+      }
+
+      const atualizado = await api.atualizarAgendamento(original.id, { ...original, ...dados });
+      substituirNaLista(atualizado);
+      mostrarMensagem(`Agendamento de ${atualizado.cliente} atualizado com sucesso.`);
+    } else {
+      const novo = await api.criarAgendamento({ ...dados, status: 'agendado' });
+      estado.agendamentos.push(novo);
+      mostrarMensagem(`Agendamento de ${novo.cliente} confirmado para ${formatarData(novo.data)} às ${novo.horario}.`);
+    }
+
     limparFormulario();
   } catch (erro) {
-    mostrarMensagem(erro.message, 'erro');
+    tratarErroDaApi(erro);
   } finally {
     botaoSalvar.disabled = false;
     atualizarTela();
+  }
+}
+
+function substituirNaLista(atualizado) {
+  estado.agendamentos = estado.agendamentos.map(agendamento =>
+    agendamento.id === atualizado.id ? atualizado : agendamento
+  );
+}
+
+// Se a API disser que o registro não existe (404), a lista local está
+// desatualizada, então ela é buscada de novo.
+async function tratarErroDaApi(erro) {
+  mostrarMensagem(erro.message, 'erro');
+
+  if (erro.status === 404) {
+    try {
+      estado.agendamentos = await api.listarAgendamentos();
+      limparFormulario();
+      atualizarTela();
+    } catch {
+      definirStatusApi(false);
+    }
+  }
+}
+
+function iniciarEdicao(id) {
+  const agendamento = buscarPorId(estado.agendamentos, id);
+
+  if (!agendamento) {
+    mostrarMensagem('Agendamento não encontrado.', 'erro');
+    return;
+  }
+
+  if (agendamento.status !== 'agendado') {
+    mostrarMensagem('Só é possível editar agendamentos em aberto.', 'aviso');
+    return;
+  }
+
+  estado.editandoId = id;
+  limparErros(campos);
+
+  campos.cliente.value = agendamento.cliente;
+  campos.telefone.value = agendamento.telefone;
+  campos.servicoId.value = agendamento.servicoId;
+  atualizarProfissionais();
+  campos.profissionalId.value = agendamento.profissionalId;
+  campos.data.value = agendamento.data;
+  atualizarHorarios(agendamento.horario);
+  campos.observacao.value = agendamento.observacao || '';
+  atualizarResumo();
+
+  tituloForm.textContent = `Editando: ${agendamento.cliente}`;
+  botaoSalvar.textContent = 'Salvar alterações';
+  botaoCancelarEdicao.hidden = false;
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function mudarStatus(id, novoStatus) {
+  const agendamento = buscarPorId(estado.agendamentos, id);
+
+  if (!agendamento) {
+    mostrarMensagem('Agendamento não encontrado.', 'erro');
+    return;
+  }
+
+  if (agendamento.status !== 'agendado') {
+    mostrarMensagem('Este agendamento já foi finalizado.', 'aviso');
+    return;
+  }
+
+  if (novoStatus === 'concluido' && !podeConcluir(agendamento)) {
+    mostrarMensagem('Só é possível concluir um atendimento depois do horário marcado.', 'aviso');
+    return;
+  }
+
+  if (novoStatus === 'cancelado' && !confirm(`Cancelar o agendamento de ${agendamento.cliente}?`)) {
+    return;
+  }
+
+  try {
+    const atualizado = await api.alterarStatus(id, novoStatus);
+    substituirNaLista(atualizado);
+
+    if (estado.editandoId === id) {
+      limparFormulario();
+    }
+
+    const texto = novoStatus === 'concluido' ? 'concluído' : 'cancelado';
+    mostrarMensagem(`Agendamento de ${agendamento.cliente} ${texto}.`);
+  } catch (erro) {
+    tratarErroDaApi(erro);
+  } finally {
+    atualizarHorarios();
+    atualizarTela();
+  }
+}
+
+async function excluir(id) {
+  const agendamento = buscarPorId(estado.agendamentos, id);
+
+  if (!agendamento) {
+    mostrarMensagem('Agendamento não encontrado.', 'erro');
+    return;
+  }
+
+  if (!confirm(`Excluir o agendamento de ${agendamento.cliente}? Esta ação não pode ser desfeita.`)) {
+    return;
+  }
+
+  try {
+    await api.excluirAgendamento(id);
+    estado.agendamentos = estado.agendamentos.filter(item => item.id !== id);
+
+    if (estado.editandoId === id) {
+      limparFormulario();
+    }
+
+    mostrarMensagem(`Agendamento de ${agendamento.cliente} excluído.`);
+  } catch (erro) {
+    tratarErroDaApi(erro);
+  } finally {
+    atualizarHorarios();
+    atualizarTela();
+  }
+}
+
+function tratarCliqueNaLista(evento) {
+  const botao = evento.target.closest('[data-acao]');
+  if (!botao) {
+    return;
+  }
+
+  const id = Number(botao.dataset.id);
+  const acao = botao.dataset.acao;
+
+  if (acao === 'editar') {
+    iniciarEdicao(id);
+  } else if (acao === 'concluir') {
+    mudarStatus(id, 'concluido');
+  } else if (acao === 'cancelar') {
+    mudarStatus(id, 'cancelado');
+  } else if (acao === 'excluir') {
+    excluir(id);
   }
 }
 
@@ -248,6 +404,8 @@ function registrarEventos() {
   campos.servicoId.addEventListener('change', atualizarCamposDependentes);
   campos.profissionalId.addEventListener('change', () => atualizarHorarios());
   campos.data.addEventListener('change', () => atualizarHorarios());
+
+  document.querySelector('#lista-agendamentos').addEventListener('click', tratarCliqueNaLista);
 }
 
 async function iniciar() {
