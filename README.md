@@ -70,7 +70,7 @@ npm install
 npm start
 ```
 
-Depois, acesse **http://localhost:3000** no navegador. O mesmo comando sobe a API e a página.
+Depois, acesse **http://localhost:3400** no navegador. O mesmo comando sobe a API e a página.
 
 > Os dados ficam salvos no arquivo `db.json`. Para voltar aos dados de exemplo, use `git checkout db.json`.
 

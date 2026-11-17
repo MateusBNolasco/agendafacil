@@ -1,4 +1,4 @@
-const URL_API = 'http://localhost:3000';
+const URL_API = 'http://localhost:3400';
 
 // Centraliza todas as chamadas à API: verifica a resposta e transforma
 // falhas de rede e códigos de erro em mensagens claras para o usuário.
