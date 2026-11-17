@@ -26,10 +26,6 @@ export function mostrarMensagem(texto, tipo = 'sucesso') {
   }
 }
 
-export function esconderMensagem() {
-  elementos.mensagem.hidden = true;
-}
-
 export function mostrarErros(erros, campos) {
   limparErros(campos);
 
@@ -53,7 +49,7 @@ export function limparErros(campos) {
 }
 
 export function preencherOpcoes(select, itens, textoPadrao) {
-  const opcoes = itens.map(item => `<option value="${item.valor}">${escaparHtml(item.texto)}</option>`);
+  const opcoes = itens.map(item => `<option value="${escaparHtml(item.valor)}">${escaparHtml(item.texto)}</option>`);
   select.innerHTML = `<option value="">${textoPadrao}</option>${opcoes.join('')}`;
 }
 
@@ -102,20 +98,20 @@ function criarCartao(agendamento, servicos, profissionais) {
   const pendente = estaPendente(agendamento);
   const selo = pendente
     ? '<span class="selo selo--pendente">Aguardando baixa</span>'
-    : `<span class="selo selo--${agendamento.status}">${STATUS[agendamento.status]}</span>`;
+    : `<span class="selo selo--${escaparHtml(agendamento.status)}">${STATUS[agendamento.status] || '—'}</span>`;
   const observacao = agendamento.observacao
     ? `<p class="cartao__obs">“${escaparHtml(agendamento.observacao)}”</p>`
     : '';
 
   return `
-    <li class="cartao cartao--${agendamento.status}">
+    <li class="cartao cartao--${escaparHtml(agendamento.status)}">
       <div class="cartao__quando">
-        <span class="cartao__hora">${agendamento.horario}</span>
-        <span class="cartao__dia">${nomeDoDia(agendamento.data)} · ${formatarData(agendamento.data).slice(0, 5)}</span>
+        <span class="cartao__hora">${escaparHtml(agendamento.horario)}</span>
+        <span class="cartao__dia">${escaparHtml(`${nomeDoDia(agendamento.data)} · ${formatarData(agendamento.data).slice(0, 5)}`)}</span>
       </div>
       <div>
         <h3 class="cartao__cliente">${escaparHtml(agendamento.cliente)}</h3>
-        <p class="cartao__detalhes">${servico ? servico.nome : 'Serviço removido'} · ${profissional ? profissional.nome : 'Profissional removido'}</p>
+        <p class="cartao__detalhes">${escaparHtml(servico ? servico.nome : 'Serviço removido')} · ${escaparHtml(profissional ? profissional.nome : 'Profissional removido')}</p>
         <p class="cartao__detalhes">${escaparHtml(agendamento.telefone)}${servico ? ` · ${servico.duracao} min` : ''}</p>
         ${observacao}
       </div>

@@ -1,5 +1,7 @@
 const URL_API = 'http://localhost:3000';
 
+// Centraliza todas as chamadas à API: verifica a resposta e transforma
+// falhas de rede e códigos de erro em mensagens claras para o usuário.
 async function requisitar(caminho, opcoes = {}) {
   let resposta;
 
@@ -19,7 +21,9 @@ async function requisitar(caminho, opcoes = {}) {
   }
 
   if (!resposta.ok) {
-    throw new Error(`A API respondeu com erro ${resposta.status}. Tente novamente.`);
+    const erro = new Error(`A API respondeu com erro ${resposta.status}. Tente novamente.`);
+    erro.status = resposta.status;
+    throw erro;
   }
 
   return resposta.json();

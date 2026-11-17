@@ -23,6 +23,8 @@ import {
   renderizarLista
 } from './ui.js';
 
+// Cópia local dos dados da API. Toda alteração passa pela API primeiro
+// e só depois atualiza o estado e redesenha a tela (atualizarTela).
 const estado = {
   servicos: [],
   profissionais: [],
@@ -183,7 +185,9 @@ async function salvarAgendamento(evento) {
     if (estado.editandoId) {
       const original = buscarPorId(estado.agendamentos, estado.editandoId);
       if (!original) {
-        throw new Error('O agendamento que estava sendo editado não existe mais.');
+        const erro = new Error('O agendamento que estava sendo editado não existe mais.');
+        erro.status = 404;
+        throw erro;
       }
 
       const atualizado = await api.atualizarAgendamento(original.id, { ...original, ...dados });
@@ -215,7 +219,9 @@ function substituirNaLista(atualizado) {
 async function tratarErroDaApi(erro) {
   mostrarMensagem(erro.message, 'erro');
 
-  if (erro.status === 404) {
+  if (!erro.status) {
+    definirStatusApi(false);
+  } else if (erro.status === 404) {
     try {
       estado.agendamentos = await api.listarAgendamentos();
       limparFormulario();
@@ -428,7 +434,7 @@ function preencherSelects() {
   }));
 
   preencherOpcoes(campos.servicoId, opcoesServicos, 'Selecione o serviço');
-  preencherOpcoes(filtros.profissional, opcoesProfissionais, 'Todos os profissionais');
+  preencherOpcoes(filtros.profissional, opcoesProfissionais, 'Toda a equipe');
 }
 
 function registrarEventos() {
@@ -455,10 +461,10 @@ function registrarEventos() {
 async function iniciar() {
   document.querySelector('#data-hoje').textContent = formatarDataExtenso(new Date());
   campos.data.min = dataISO();
+  campos.data.max = `${new Date().getFullYear() + 1}-12-31`;
   registrarEventos();
 
-  await carregarFeriados();
-  await carregarDados();
+  await Promise.all([carregarFeriados(), carregarDados()]);
 
   preencherSelects();
   atualizarTela();

@@ -67,6 +67,10 @@ export function verificarDia(data, feriados) {
     return 'Não é possível agendar em uma data que já passou.';
   }
 
+  if (Number(data.slice(0, 4)) > new Date().getFullYear() + 1) {
+    return 'A agenda só está aberta até o fim do próximo ano.';
+  }
+
   const diaSemana = new Date(`${data}T00:00:00`).getDay();
   if (!FUNCIONAMENTO[diaSemana]) {
     return 'O estúdio não abre aos domingos.';
