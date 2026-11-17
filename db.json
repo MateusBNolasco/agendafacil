@@ -1,0 +1,27 @@
+{
+  "servicos": [
+    { "id": 1, "nome": "Corte de cabelo", "duracao": 30, "preco": 45 },
+    { "id": 2, "nome": "Barba", "duracao": 30, "preco": 35 },
+    { "id": 3, "nome": "Corte + barba", "duracao": 60, "preco": 75 },
+    { "id": 4, "nome": "Escova", "duracao": 45, "preco": 60 },
+    { "id": 5, "nome": "Coloração", "duracao": 90, "preco": 150 },
+    { "id": 6, "nome": "Manicure", "duracao": 45, "preco": 40 }
+  ],
+  "profissionais": [
+    { "id": 1, "nome": "Rafael Souza", "servicos": [1, 2, 3] },
+    { "id": 2, "nome": "Camila Rocha", "servicos": [1, 4, 5] },
+    { "id": 3, "nome": "Juliana Alves", "servicos": [4, 6] }
+  ],
+  "agendamentos": [
+    { "id": 1, "cliente": "Ana Paula Ferreira", "telefone": "(11) 99812-3344", "servicoId": 4, "profissionalId": 2, "data": "2026-11-16", "horario": "10:00", "observacao": "", "status": "concluido" },
+    { "id": 2, "cliente": "Bruno Carvalho", "telefone": "(11) 99701-5566", "servicoId": 3, "profissionalId": 1, "data": "2026-11-16", "horario": "14:00", "observacao": "", "status": "concluido" },
+    { "id": 3, "cliente": "Carla Mendes", "telefone": "(11) 98455-1020", "servicoId": 6, "profissionalId": 3, "data": "2026-11-17", "horario": "09:00", "observacao": "", "status": "concluido" },
+    { "id": 4, "cliente": "Diego Martins", "telefone": "(11) 97320-8899", "servicoId": 1, "profissionalId": 1, "data": "2026-11-17", "horario": "16:30", "observacao": "Cliente avisou que não poderia vir.", "status": "cancelado" },
+    { "id": 5, "cliente": "Eduarda Lima", "telefone": "(11) 99654-7781", "servicoId": 5, "profissionalId": 2, "data": "2026-11-18", "horario": "09:00", "observacao": "Tom acobreado.", "status": "agendado" },
+    { "id": 6, "cliente": "Felipe Andrade", "telefone": "(11) 98123-4567", "servicoId": 2, "profissionalId": 1, "data": "2026-11-18", "horario": "11:00", "observacao": "", "status": "agendado" },
+    { "id": 7, "cliente": "Gabriela Nunes", "telefone": "(11) 99988-1122", "servicoId": 6, "profissionalId": 3, "data": "2026-11-19", "horario": "10:00", "observacao": "", "status": "agendado" },
+    { "id": 8, "cliente": "Henrique Costa", "telefone": "(11) 97777-3030", "servicoId": 3, "profissionalId": 1, "data": "2026-11-19", "horario": "15:00", "observacao": "", "status": "agendado" },
+    { "id": 9, "cliente": "Isabela Ribeiro", "telefone": "(11) 98642-9753", "servicoId": 4, "profissionalId": 3, "data": "2026-11-21", "horario": "09:00", "observacao": "", "status": "agendado" },
+    { "id": 10, "cliente": "João Victor Prado", "telefone": "(11) 99210-6543", "servicoId": 1, "profissionalId": 2, "data": "2026-11-23", "horario": "13:30", "observacao": "", "status": "agendado" }
+  ]
+}
