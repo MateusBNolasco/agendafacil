@@ -19,7 +19,13 @@ export async function buscarFeriados(ano) {
     return cache[ano];
   }
 
-  const resposta = await fetch(`${URL_FERIADOS}/${ano}`);
+  let resposta;
+  try {
+    resposta = await fetch(`${URL_FERIADOS}/${ano}`);
+  } catch {
+    throw new Error('Não foi possível consultar a BrasilAPI (verifique a internet).');
+  }
+
   if (!resposta.ok) {
     throw new Error(`A BrasilAPI não retornou os feriados de ${ano}.`);
   }
