@@ -30,29 +30,28 @@
       </div>
       <div class="topo__info">
         <span id="status-api" class="selo-api">Conectando…</span>
-        <p id="data-hoje" class="topo__data"></p>
       </div>
     </div>
   </header>
 
   <main class="container">
     <section class="indicadores" aria-label="Resumo da agenda">
-      <article class="indicador indicador--hoje">
+      <article class="indicador">
         <span class="indicador__rotulo">Hoje</span>
         <strong id="ind-hoje" class="indicador__valor">0</strong>
         <small class="indicador__detalhe">atendimentos no dia</small>
       </article>
-      <article class="indicador indicador--proximos">
+      <article class="indicador">
         <span class="indicador__rotulo">Próximos</span>
         <strong id="ind-proximos" class="indicador__valor">0</strong>
         <small class="indicador__detalhe">agendamentos em aberto</small>
       </article>
-      <article class="indicador indicador--previsto">
+      <article class="indicador">
         <span class="indicador__rotulo">Faturamento previsto</span>
         <strong id="ind-previsto" class="indicador__valor">R$ 0,00</strong>
         <small class="indicador__detalhe">serviços agendados</small>
       </article>
-      <article class="indicador indicador--realizado">
+      <article class="indicador">
         <span class="indicador__rotulo">Faturamento realizado</span>
         <strong id="ind-realizado" class="indicador__valor">R$ 0,00</strong>
         <small class="indicador__detalhe">serviços concluídos</small>
@@ -150,16 +149,16 @@
             <option value="cancelado">Cancelados</option>
           </select>
           <select id="filtro-profissional" aria-label="Filtrar por profissional">
-            <option value="">Todos os profissionais</option>
+            <option value="">Toda a equipe</option>
           </select>
           <input id="filtro-data" type="date" aria-label="Filtrar por data">
           <select id="ordenacao" aria-label="Ordenar agendamentos">
-            <option value="data">Data: mais próximos</option>
-            <option value="recentes">Data: mais distantes</option>
-            <option value="cliente">Cliente: A–Z</option>
-            <option value="valor">Valor: maior primeiro</option>
+            <option value="data">Mais próximos</option>
+            <option value="recentes">Mais distantes</option>
+            <option value="cliente">Cliente (A–Z)</option>
+            <option value="valor">Maior valor</option>
           </select>
-          <button id="btn-limpar-filtros" type="button" class="botao botao--texto">Limpar filtros</button>
+          <button id="btn-limpar-filtros" type="button" class="botao botao--texto filtros__limpar">Limpar filtros</button>
         </div>
 
         <p id="carregando" class="carregando" hidden>Carregando agendamentos…</p>

@@ -13,10 +13,6 @@ export function nomeDoDia(data) {
   return new Date(`${data}T00:00:00`).toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
 }
 
-export function formatarDataExtenso(data) {
-  return data.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-}
-
 export function mascararTelefone(valor) {
   const digitos = valor.replace(/\D/g, '').slice(0, 11);
 

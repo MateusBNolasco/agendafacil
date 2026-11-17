@@ -1,6 +1,6 @@
 import * as api from './api.js';
 import { buscarFeriados } from './feriados.js';
-import { formatarData, formatarDataExtenso, formatarMoeda, mascararTelefone } from './formatacao.js';
+import { formatarData, formatarMoeda, mascararTelefone } from './formatacao.js';
 import {
   buscarPorId,
   calcularIndicadores,
@@ -459,7 +459,6 @@ function registrarEventos() {
 }
 
 async function iniciar() {
-  document.querySelector('#data-hoje').textContent = formatarDataExtenso(new Date());
   campos.data.min = dataISO();
   campos.data.max = `${new Date().getFullYear() + 1}-12-31`;
   registrarEventos();
