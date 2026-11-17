@@ -117,7 +117,10 @@ textarea {
 .topo__data {
   font-size: .9rem;
   opacity: .85;
-  text-transform: capitalize;
+}
+
+.topo__data::first-letter {
+  text-transform: uppercase;
 }
 
 .selo-api {
@@ -201,6 +204,7 @@ textarea {
   background: var(--primaria-clara);
   padding: 4px 12px;
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 /* Indicadores */
@@ -498,9 +502,13 @@ select:disabled {
 
 .filtros {
   display: grid;
-  grid-template-columns: 2fr repeat(4, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   gap: 10px;
   margin-bottom: 18px;
+}
+
+.filtros__busca {
+  grid-column: 1 / -1;
 }
 
 /* Lista de agendamentos */
@@ -694,10 +702,6 @@ select:disabled {
 
   .filtros {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .filtros__busca {
-    grid-column: 1 / -1;
   }
 }
 
