@@ -21,8 +21,9 @@ O estúdio anotava os horários em papel e no WhatsApp, o que causava horários 
 - Horários livres calculados a partir do expediente, da duração do serviço e da agenda do profissional
 - Bloqueio de datas passadas, domingos e feriados nacionais (BrasilAPI)
 - Pesquisa pelo nome do cliente, filtros por situação, profissional e data, e ordenação
-- Indicadores: atendimentos do dia, próximos agendamentos, faturamento previsto, faturamento realizado e serviço mais procurado
+- Indicadores: atendimentos do dia, próximos agendamentos, faturamento previsto, faturamento realizado, cancelados e serviço mais procurado
 - Mensagens de sucesso, erro e lista vazia; máscara de telefone
+- Modo diurno e noturno, com a preferência visual salva no navegador
 - Layout responsivo (computador e celular)
 
 ## Regras de negócio
@@ -44,7 +45,7 @@ O estúdio anotava os horários em papel e no WhatsApp, o que causava horários 
 - JavaScript (ES6+) com módulos `import`/`export`, sem frameworks
 - [json-server](https://github.com/typicode/json-server) como API REST local (`db.json`)
 - [BrasilAPI](https://brasilapi.com.br/docs#tag/Feriados-Nacionais) para os feriados nacionais
-- `localStorage` para guardar os feriados já consultados
+- `localStorage` para guardar os feriados já consultados e a preferência de tema
 
 ## APIs utilizadas
 
