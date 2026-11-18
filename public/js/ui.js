@@ -68,6 +68,7 @@ export function renderizarIndicadores(indicadores) {
   document.querySelector('#ind-proximos').textContent = indicadores.proximos;
   document.querySelector('#ind-previsto').textContent = formatarMoeda(indicadores.faturamentoPrevisto);
   document.querySelector('#ind-realizado').textContent = formatarMoeda(indicadores.faturamentoRealizado);
+  document.querySelector('#ind-cancelados').textContent = indicadores.cancelados;
 
   const servico = indicadores.maisProcurado;
   document.querySelector('#ind-servico').textContent = servico ? servico.nome : '—';

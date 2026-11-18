@@ -207,6 +207,7 @@ export function calcularIndicadores(agendamentos, servicos) {
     proximos: emAberto.filter(agendamento => agendamento.data >= hoje).length,
     faturamentoPrevisto: emAberto.reduce((total, agendamento) => total + precoDoAgendamento(agendamento, servicos), 0),
     faturamentoRealizado: concluidos.reduce((total, agendamento) => total + precoDoAgendamento(agendamento, servicos), 0),
+    cancelados: agendamentos.filter(agendamento => agendamento.status === 'cancelado').length,
     maisProcurado: servicoMaisProcurado(agendamentos, servicos)
   };
 }
