@@ -39,6 +39,9 @@ const botaoSalvar = document.querySelector('#btn-salvar');
 const botaoCancelarEdicao = document.querySelector('#btn-cancelar-edicao');
 const avisoDia = document.querySelector('#aviso-dia');
 const resumo = document.querySelector('#resumo');
+const botaoTema = document.querySelector('#btn-tema');
+const textoTema = document.querySelector('#texto-tema');
+const CHAVE_TEMA = 'agendafacil:tema';
 
 const campos = {
   cliente: document.querySelector('#cliente'),
@@ -57,6 +60,29 @@ const filtros = {
   data: document.querySelector('#filtro-data'),
   ordenacao: document.querySelector('#ordenacao')
 };
+
+function aplicarTema(tema, salvar = true) {
+  const noturno = tema === 'noturno';
+  document.documentElement.dataset.tema = tema;
+  botaoTema.setAttribute('aria-pressed', String(noturno));
+  botaoTema.setAttribute('aria-label', noturno ? 'Ativar modo diurno' : 'Ativar modo noturno');
+  textoTema.textContent = noturno ? 'Modo diurno' : 'Modo noturno';
+  botaoTema.querySelector('.botao-tema__icone').textContent = noturno ? '☀' : '☾';
+
+  if (salvar) {
+    localStorage.setItem(CHAVE_TEMA, tema);
+  }
+}
+
+function iniciarTema() {
+  const temaSalvo = localStorage.getItem(CHAVE_TEMA);
+  aplicarTema(temaSalvo === 'noturno' ? 'noturno' : 'diurno', false);
+
+  botaoTema.addEventListener('click', () => {
+    const proximoTema = document.documentElement.dataset.tema === 'noturno' ? 'diurno' : 'noturno';
+    aplicarTema(proximoTema);
+  });
+}
 
 function servicoSelecionado() {
   return buscarPorId(estado.servicos, Number(campos.servicoId.value));
@@ -461,6 +487,7 @@ function registrarEventos() {
 async function iniciar() {
   campos.data.min = dataISO();
   campos.data.max = `${new Date().getFullYear() + 1}-12-31`;
+  iniciarTema();
   registrarEventos();
 
   await Promise.all([carregarFeriados(), carregarDados()]);

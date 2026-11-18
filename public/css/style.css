@@ -25,6 +25,30 @@
   --fonte: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
+html[data-tema="noturno"] {
+  --fundo: #0f172a;
+  --superficie: #172033;
+  --texto: #f1f5f9;
+  --texto-suave: #b7c3d4;
+  --borda: #334155;
+
+  --primaria: #2dd4bf;
+  --primaria-escura: #14b8a6;
+  --primaria-clara: #163f42;
+  --destaque: #fb8b73;
+
+  --sucesso: #86efac;
+  --sucesso-fundo: #153c27;
+  --erro: #fca5a5;
+  --erro-fundo: #4a1f25;
+  --aviso: #fcd34d;
+  --aviso-fundo: #4b360d;
+  --info: #93c5fd;
+  --info-fundo: #1e3a5f;
+
+  --sombra: 0 1px 2px rgba(0, 0, 0, .22), 0 10px 30px rgba(0, 0, 0, .28);
+}
+
 *,
 *::before,
 *::after {
@@ -109,7 +133,7 @@ textarea {
 
 .topo__info {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: flex-end;
   gap: 6px;
 }
@@ -139,6 +163,34 @@ textarea {
 
 .selo-api--offline::before {
   background: #f87171;
+}
+
+.botao-tema {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, .12);
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+
+.botao-tema:hover {
+  background: rgba(255, 255, 255, .22);
+}
+
+.botao-tema:active {
+  transform: translateY(1px);
+}
+
+.botao-tema__icone {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 /* Estrutura */
@@ -244,6 +296,38 @@ textarea {
 .indicador__detalhe {
   font-size: .8rem;
   color: var(--texto-suave);
+}
+
+html[data-tema="noturno"] input,
+html[data-tema="noturno"] select,
+html[data-tema="noturno"] textarea {
+  color: var(--texto);
+  background: #111827;
+}
+
+html[data-tema="noturno"] input:focus,
+html[data-tema="noturno"] select:focus,
+html[data-tema="noturno"] textarea:focus {
+  background: #111827;
+}
+
+html[data-tema="noturno"] select:disabled {
+  background: #0c1322;
+}
+
+html[data-tema="noturno"] .botao--secundario,
+html[data-tema="noturno"] .acao,
+html[data-tema="noturno"] .cartao {
+  background: #1b273a;
+}
+
+html[data-tema="noturno"] .cartao--cancelado,
+html[data-tema="noturno"] .cartao__quando {
+  background: #111827;
+}
+
+html[data-tema="noturno"] .selo--cancelado {
+  background: #293548;
 }
 
 /* Mensagens */
